@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.vnsoft.exam">
+    package="com.uni.information_security">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.vnsoft.exam.base.MyApp"
+        android:name="com.uni.information_security.base.MyApp"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
@@ -43,9 +43,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name="com.vnsoft.exam.ui.login.LoginActivity" />
+        <activity android:name="com.uni.information_security.ui.login.LoginActivity" />
         <activity
-            android:name="com.vnsoft.exam.ui.splash.SplashActivity"
+            android:name="com.uni.information_security.ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.vnsoft.exam.ui.main.MainActivity"
+            android:name="com.uni.information_security.ui.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
