@@ -2,156 +2,78 @@ package com.uni.information_security.ui.login
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.fragment.app.FragmentActivity
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.facebook.AccessToken
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.uni.information_security.R
 import com.uni.information_security.data.DataManager
-import com.uni.information_security.injection.NetworkModule
-import com.uni.information_security.model.response.BaseResponse
-import com.uni.information_security.model.constants.TypeLogin
-import com.uni.information_security.model.request.LoginRequest
-import com.uni.information_security.model.request.SocialRequest
-import com.uni.information_security.model.response.User
+import com.uni.information_security.model.request.chat.LoginRequest
+import com.uni.information_security.model.response.chat.User
 import com.uni.information_security.network.Api
-import com.uni.information_security.utils.PREF_ACCOUNT
-import com.uni.information_security.utils.PREF_LOGIN_TYPE
-import com.uni.information_security.utils.PREF_PASS
+import com.uni.information_security.utils.*
 import com.uni.information_security.view_model.BaseViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
 @SuppressLint("CheckResult")
-class LoginViewModel(): BaseViewModel() {
+class LoginViewModel() : BaseViewModel() {
     @Inject
     lateinit var dataManager: DataManager
+
     @Inject
     lateinit var api: Api
 
-    val loginResponse =  MutableLiveData<BaseResponse<User>>()
+    val database = Firebase.database.reference
 
-    fun login(request: LoginRequest){
-        api.loginManual(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onRetrievePostListStart() }
-            .doOnTerminate { onRetrievePostListFinish() }
-            .subscribe(
-                { result ->
-                    dataManager.save(PREF_ACCOUNT, request.email)
-                    dataManager.save(PREF_PASS, request.password)
-                    dataManager.save(PREF_LOGIN_TYPE, TypeLogin.MANUAL.value)
+    val loginResponse = MutableLiveData<Boolean>()
+    val initUserResponse = MutableLiveData<Boolean>()
 
-                    dataManager.clear(User::class.java)
-                    dataManager.save(result.body)
 
-                    NetworkModule.mToken = result.body.accessToken!!
-                    loginResponse.postValue(result) },
-                {throwable->
-                    handleApiError(throwable)
+    fun login(request: LoginRequest) {
+        onRetrievePostListStart()
+        usersList.clear()
+        database.child("Users").get()
+            .addOnCompleteListener { users ->
+                for (sns in users.result?.children ?: ArrayList()) {
+                    val user = sns.getValue<User>()
+                    if (request.username == user?.username && request.password == user?.password) {
+                        dataManager.save(PREF_USERNAME, user?.username)
+                        dataManager.save(PREF_PASS, user?.password)
+                        dataManager.save(PREF_KEY, user?.key)
+                        dataManager.save(PREF_AUTO_LOGIN, true)
+                        loginResponse.postValue(true)
+                        onRetrievePostListFinish()
+                        break
+                    }
                 }
-            )
-    }
-
-
-    fun loginFacebook(request: SocialRequest){
-        api.loginFacebook(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onRetrievePostListStart() }
-            .doOnTerminate { onRetrievePostListFinish() }
-            .subscribe(
-                { result ->
-                    dataManager.save(PREF_LOGIN_TYPE, TypeLogin.FACEBOOK.value)
-
-                    dataManager.clear(User::class.java)
-                    dataManager.save(result.body)
-
-                    NetworkModule.mToken = result.body.accessToken!!
-                    loginResponse.postValue(result) },
-                {throwable->
-                    handleApiError(throwable)
-                }
-            )
-    }
-
-    fun loginGoogle(request: SocialRequest){
-        api.loginGoogle(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onRetrievePostListStart() }
-            .doOnTerminate { onRetrievePostListFinish() }
-            .subscribe(
-                { result ->
-                    dataManager.save(PREF_LOGIN_TYPE, TypeLogin.GOOGLE.value)
-
-                    dataManager.clear(User::class.java)
-                    dataManager.save(result.body)
-
-                    NetworkModule.mToken = result.body.accessToken!!
-                    loginResponse.postValue(result) },
-                {throwable->
-                    handleApiError(throwable)
-                }
-            )
-    }
-
-    fun autoLogin(context: Context){
-        val type = dataManager.getInt(PREF_LOGIN_TYPE)
-        if (type == TypeLogin.FACEBOOK.value){
-            val accessToken = AccessToken.getCurrentAccessToken()
-            if (accessToken != null && accessToken.token != null)
-                loginFacebook(SocialRequest(accessToken.token))
-        }else if (type == TypeLogin.GOOGLE.value){
-            refreshIdTokenGoogle(context)
-        }else{
-            val email = dataManager.getString(PREF_ACCOUNT)
-            val password = dataManager.getString(PREF_PASS)
-            if (email == null){
-                responseMessage.postValue("error")
-            }else
-                login(LoginRequest(email, password))
-        }
-    }
-
-    private fun refreshIdTokenGoogle(context: Context) {
-        val gso =
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.server_client_id))
-                .requestEmail()
-                .build()
-        val mGoogleApiClient = GoogleApiClient.Builder(context)
-            .enableAutoManage(
-                context as FragmentActivity /* FragmentActivity */
-                /* OnConnectionFailedListener */
-            ) { }
-            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-            .build()
-        val opr =
-            Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient)
-        if (opr.isDone) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            val result = opr.get()
-            //                            handleSignInResult(result);  // result.getSignInAccount().getIdToken(), etc.
-            val googleSignInAccount = result.signInAccount
-            loginGoogle(SocialRequest(googleSignInAccount!!.idToken!!))
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            opr.setResultCallback { googleSignInResult ->
-                val googleSignInAccount =
-                    googleSignInResult.signInAccount
-                if (googleSignInAccount != null) {
-                    loginGoogle(SocialRequest(googleSignInAccount.idToken!!))
-                }
+                dataManager.save(PREF_AUTO_LOGIN, false)
+                responseMessage.value = EMPTY_STRING
             }
+            .addOnCanceledListener {
+                onRetrievePostListFinish()
+                errorMessage.postValue(R.string.str_error_on_get_data)
+            }
+    }
+
+
+    fun autoLogin(context: Context) {
+        if (dataManager.getBoolean(PREF_AUTO_LOGIN))
+            login(
+                LoginRequest(
+                    dataManager.getString(PREF_USERNAME),
+                    dataManager.getString(PREF_PASS)
+                )
+            )
+        else {
+            dataManager.save(PREF_AUTO_LOGIN, false)
+            responseMessage.value = EMPTY_STRING
         }
     }
+
 }

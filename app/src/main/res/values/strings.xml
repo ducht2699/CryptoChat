@@ -19,5 +19,10 @@
     <string name="str_email">Email</string>
     <string name="server_client_id">784144847988-mr6067n9hph3k36rvnuikk3ukikrphrp.apps.googleusercontent.com</string>
     <string name="str_loading">Loading...</string>
+    <string name="str_error_cancelled">Có lỗi xảy ra, xin vui lòng thử lại!</string>
+    <string name="str_login_auth_error">Đăng nhập thất bại, xin thử lại!</string>
+    <string name="str_error_on_get_data">Có lỗi xảy ra, vui lòng thử lại sau!</string>
+    <string name="str_username">Tài khoản</string>
+    <string name="str_missing_input">Mời nhập đủ thông tin!</string>
 
 </resources>

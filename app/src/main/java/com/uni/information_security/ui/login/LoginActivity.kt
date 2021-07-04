@@ -2,31 +2,24 @@ package com.uni.information_security.ui.login
 
 import android.content.Context
 import android.content.Intent
-import android.text.Html
-import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
 import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityLoginBinding
-import com.uni.information_security.model.request.LoginRequest
-import com.uni.information_security.model.request.SocialRequest
+import com.uni.information_security.model.request.chat.LoginRequest
 import com.uni.information_security.ui.main.MainActivity
-import com.uni.information_security.utils.GsonUtils
+import com.uni.information_security.utils.CommonUtils
+import com.uni.information_security.utils.CommonUtils.hideSoftKeyboard
+import com.uni.information_security.utils.EMPTY_STRING
 import com.uni.information_security.view_model.ViewModelFactory
-import java.util.*
 
-class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
+class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), View.OnClickListener {
 
     private val RC_SIGN_IN = 1000
     private val TAG: String = "LoginActivity"
@@ -39,8 +32,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         fun getIntent(
             context: Context
         ): Intent {
-            val intent = Intent(context, LoginActivity::class.java)
-            return intent
+            return Intent(context, LoginActivity::class.java)
         }
     }
 
@@ -50,106 +42,48 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     override fun observerLiveData() {
         viewModel.apply {
-            loginResponse.observe(this@LoginActivity, androidx.lifecycle.Observer { data ->
-                startActivity(MainActivity.getIntent(this@LoginActivity))
-                finishAffinity();
+            loginResponse.observe(this@LoginActivity, { result ->
+                if (result) {
+                    startActivity(MainActivity.getIntent(this@LoginActivity))
+                }
             })
         }
     }
 
     override fun initView() {
-        binding.tvRegister.text = Html.fromHtml(resources.getString(R.string.str_has_account))
-
-        //init facebook
-        fbLoginManager = LoginManager.getInstance()
-        callbackManager = CallbackManager.Factory.create()
-
-        initGoogle()
+        binding.tvRegister.text = HtmlCompat.fromHtml(
+            resources.getString(R.string.str_has_account),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
     }
 
     override fun initListener() {
-        binding.btnLogin.setOnClickListener {
-            viewModel.login(
-                LoginRequest(
-                    binding.edtPhone.text.toString(),
-                    binding.edtPassword.text.toString()
-                )
-            )
-        }
+        binding.btnLogin.setOnClickListener(this)
 
-        binding.tvRegister.setOnClickListener {
-        }
-
-        binding.ivFacebook.setOnClickListener {
-            fbLoginManager?.logInWithReadPermissions(this, Arrays.asList("email", "public_profile"))
-        }
-
-        getInfoFacebookUser()
-
-        binding.ivGoogle.setOnClickListener {
-            val signInIntent = mGoogleSignInClient?.signInIntent
-            startActivityForResult(signInIntent,RC_SIGN_IN)
-        }
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(LoginViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, ViewModelFactory(this)).get(LoginViewModel::class.java)
     }
 
-    private fun getInfoFacebookUser() {
-        fbLoginManager?.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                println("onSuccess")
-                val accessToken = loginResult.accessToken.token
-                Log.i(TAG, "accessToken:$accessToken")
-                viewModel.loginFacebook(SocialRequest(accessToken))
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.btn_login -> {
+                hideSoftKeyboard()
+                val username = binding.edtUsername.text.toString().trim()
+
+                //TODO: encrypt password
+                val password = binding.edtPassword.text.toString().trim()
+
+                if (username == EMPTY_STRING || password == EMPTY_STRING) {
+                    Toast.makeText(this, resources.getString(R.string.str_missing_input), Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.login(LoginRequest(username, password))
+                }
+
             }
-
-            override fun onCancel() {
-                println("onCancel")
-            }
-
-            override fun onError(error: FacebookException) {
-                println("onError")
-            }
-        })
-    }
-
-    private fun initGoogle() {
-        val gso =
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.server_client_id))
-                .requestEmail()
-                .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        mGoogleSignInClient?.signOut()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        callbackManager?.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            val task: Task<GoogleSignInAccount> =
-                GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
         }
     }
 
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account =
-                completedTask.getResult(ApiException::class.java)
-            Log.d(TAG, "handleSignInResult: " + GsonUtils.getInstance().toJson(account))
-            // Signed in successfully, show authenticated UI.
-            viewModel.loginGoogle(SocialRequest(account?.idToken!!))
-        } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-        }
-    }
 }
