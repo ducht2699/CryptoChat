@@ -24,5 +24,11 @@
     <string name="str_error_on_get_data">Có lỗi xảy ra, vui lòng thử lại sau!</string>
     <string name="str_username">Tài khoản</string>
     <string name="str_missing_input">Mời nhập đủ thông tin!</string>
+    <string name="str_register">Đăng ký</string>
+    <string name="str_verify_password">Nhập lại mật khẩu</string>
+    <string name="str_finish">Hoàn tất</string>
+    <string name="str_false_verification">Xác thực mật khẩu không khớp!</string>
+    <string name="str_create_auth_error">Đăng ký thất bại, vui long thử lại</string>
+    <string name="str_success">Thành công!</string>
 
 </resources>

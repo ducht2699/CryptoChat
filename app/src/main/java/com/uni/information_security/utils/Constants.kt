@@ -15,4 +15,3 @@ var myapp: ApplicationComponent? = null
 
 const val EMPTY_STRING = ""
 
-val usersList = mutableListOf<User>()

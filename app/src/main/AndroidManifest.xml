@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.uni.information_security.base.MyApp"
+        android:name=".base.MyApp"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@drawable/logo"
@@ -17,6 +17,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        <activity android:name=".ui.register.RegisterActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -43,10 +45,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name="com.uni.information_security.ui.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name="com.uni.information_security.ui.splash.SplashActivity"
+            android:name=".ui.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.uni.information_security.ui.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"

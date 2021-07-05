@@ -34,7 +34,6 @@ import com.uni.information_security.R
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,12 +42,6 @@ import javax.crypto.spec.SecretKeySpec
 
 
 object CommonUtils {
-
-    fun hashString (data: String):String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hash = digest.digest(data.toByteArray(StandardCharsets.UTF_8))
-        return hash.toString()
-    }
 
     fun Activity.hideSoftKeyboard() {
         currentFocus?.let {
@@ -63,25 +56,22 @@ object CommonUtils {
     @RequiresApi(Build.VERSION_CODES.O)
     fun encrypt(strToEncrypt: String, myKey: String): String? {
         try {
-            val sha: MessageDigest = MessageDigest.getInstance("SHA-1")
-            var key = myKey.toByteArray(charset("UTF-8"))
+            val sha = MessageDigest.getInstance("SHA-1")
+            var key: ByteArray? = myKey.toByteArray(charset("UTF-8"))
             key = sha.digest(key)
             key = Arrays.copyOf(key, 16)
             val secretKey = SecretKeySpec(key, "AES")
-            val cipher: Cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Base64.getEncoder()
-                    .encodeToString(cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8"))))
-            } else {
-                EMPTY_STRING
-            }
-        } catch (e: Exception) {
+            return Base64.getEncoder()
+                .encodeToString(cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8"))))
+        } catch (e: java.lang.Exception) {
             println(e.toString())
         }
         return null
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun decrypt(strToDecrypt: String?, myKey: String): String? {
         try {
             val sha = MessageDigest.getInstance("SHA-1")
@@ -91,11 +81,7 @@ object CommonUtils {
             val secretKey = SecretKeySpec(key, "AES")
             val cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING")
             cipher.init(Cipher.DECRYPT_MODE, secretKey)
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)))
-            } else {
-                EMPTY_STRING
-            }
+            return String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)))
         } catch (e: java.lang.Exception) {
             println(e.toString())
         }
