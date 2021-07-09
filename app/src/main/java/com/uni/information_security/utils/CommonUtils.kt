@@ -17,7 +17,9 @@ import android.text.TextUtils
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.GenericTransitionOptions
@@ -32,11 +34,59 @@ import com.uni.information_security.R
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 
 
 object CommonUtils {
+
+    fun Activity.hideSoftKeyboard() {
+        currentFocus?.let {
+            val inputMethodManager = ContextCompat.getSystemService(
+                this,
+                InputMethodManager::class.java
+            )
+            inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun encrypt(strToEncrypt: String, myKey: String?): String? {
+        try {
+            val sha = MessageDigest.getInstance("SHA-1")
+            var key: ByteArray? = myKey?.toByteArray(charset("UTF-8"))
+            key = sha.digest(key)
+            key = Arrays.copyOf(key, 16)
+            val secretKey = SecretKeySpec(key, "AES")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+            return Base64.getEncoder()
+                .encodeToString(cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8"))))
+        } catch (e: java.lang.Exception) {
+            println(e.toString())
+        }
+        return null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun decrypt(strToDecrypt: String?, myKey: String?): String? {
+        try {
+            val sha = MessageDigest.getInstance("SHA-1")
+            var key: ByteArray? = myKey?.toByteArray(charset("UTF-8"))
+            key = sha.digest(key)
+            key = Arrays.copyOf(key, 16)
+            val secretKey = SecretKeySpec(key, "AES")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING")
+            cipher.init(Cipher.DECRYPT_MODE, secretKey)
+            return String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)))
+        } catch (e: java.lang.Exception) {
+            println(e.toString())
+        }
+        return null
+    }
 
     private fun getActivityRoot(window: Window): View {
         return (window.decorView.rootView.findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(
