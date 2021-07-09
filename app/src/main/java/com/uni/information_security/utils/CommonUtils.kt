@@ -54,10 +54,10 @@ object CommonUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun encrypt(strToEncrypt: String, myKey: String): String? {
+    fun encrypt(strToEncrypt: String, myKey: String?): String? {
         try {
             val sha = MessageDigest.getInstance("SHA-1")
-            var key: ByteArray? = myKey.toByteArray(charset("UTF-8"))
+            var key: ByteArray? = myKey?.toByteArray(charset("UTF-8"))
             key = sha.digest(key)
             key = Arrays.copyOf(key, 16)
             val secretKey = SecretKeySpec(key, "AES")
@@ -72,10 +72,10 @@ object CommonUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun decrypt(strToDecrypt: String?, myKey: String): String? {
+    fun decrypt(strToDecrypt: String?, myKey: String?): String? {
         try {
             val sha = MessageDigest.getInstance("SHA-1")
-            var key: ByteArray? = myKey.toByteArray(charset("UTF-8"))
+            var key: ByteArray? = myKey?.toByteArray(charset("UTF-8"))
             key = sha.digest(key)
             key = Arrays.copyOf(key, 16)
             val secretKey = SecretKeySpec(key, "AES")

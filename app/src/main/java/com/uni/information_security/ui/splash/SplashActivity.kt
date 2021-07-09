@@ -1,5 +1,7 @@
 package com.uni.information_security.ui.splash
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProviders
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
@@ -22,6 +24,7 @@ class SplashActivity : BaseActivity<LoginViewModel, ActivitySplashBinding>() {
     override fun initView() {
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun initListener() {
         viewModel.autoLogin(this)
     }
@@ -29,8 +32,13 @@ class SplashActivity : BaseActivity<LoginViewModel, ActivitySplashBinding>() {
     override fun observerLiveData() {
         viewModel.apply {
             loginResponse.observe(this@SplashActivity, {
-                startActivity(MainActivity.getIntent(this@SplashActivity))
-                finishAffinity()
+                if (it) {
+                    startActivity(MainActivity.getIntent(this@SplashActivity))
+                    finishAffinity()
+                } else {
+                    startActivity(LoginActivity.getIntent(this@SplashActivity))
+                    finishAffinity()
+                }
             })
             responseMessage.observe(this@SplashActivity, {
                 startActivity(LoginActivity.getIntent(this@SplashActivity))

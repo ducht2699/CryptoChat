@@ -47,17 +47,18 @@ class LoginViewModel() : BaseViewModel() {
                     val user = sns.getValue<User>()
                     val password = CommonUtils.decrypt(
                         user?.password,
-                        user?.username ?: EMPTY_STRING
+                        user?.id
                     )
                     if (request.username == user?.username && request.password == password) {
                         dataManager.save(PREF_USERNAME, user?.username)
-                        dataManager.save(PREF_PASS, user?.password)
+                        dataManager.save(PREF_PASS, password)
                         dataManager.save(PREF_AUTO_LOGIN, true)
                         loginResponse.postValue(true)
                         onRetrievePostListFinish()
                         return@addOnCompleteListener
                     }
                 }
+                loginResponse.postValue(false)
                 onRetrievePostListFinish()
                 dataManager.save(PREF_AUTO_LOGIN, false)
                 errorMessage.postValue(R.string.str_login_auth_error)
@@ -108,10 +109,10 @@ class LoginViewModel() : BaseViewModel() {
                     val id = database.push().key
                     val passEnc = CommonUtils.encrypt(
                         request.password ?: EMPTY_STRING,
-                        request.username ?: EMPTY_STRING
+                        id
                     )
 
-                    database.child(USER_PATH).child(id ?: EMPTY_STRING)
+                    database.child(USER_PATH).child(id!!)
                         .setValue(User(id, request.username, passEnc))
                         .addOnCompleteListener {
                             if (it.isSuccessful) {

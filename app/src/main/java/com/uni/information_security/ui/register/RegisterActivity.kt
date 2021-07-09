@@ -65,6 +65,7 @@ class RegisterActivity : BaseActivity<LoginViewModel, ActivityRegisterBinding>()
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View?) {
 
         when (v?.id) {
