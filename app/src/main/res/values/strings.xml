@@ -30,5 +30,8 @@
     <string name="str_false_verification">Xác thực mật khẩu không khớp!</string>
     <string name="str_create_auth_error">Đăng ký thất bại, vui long thử lại</string>
     <string name="str_success">Thành công!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_search">Search</string>
 
 </resources>
