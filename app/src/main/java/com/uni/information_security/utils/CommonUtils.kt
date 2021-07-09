@@ -43,6 +43,12 @@ import javax.crypto.spec.SecretKeySpec
 
 object CommonUtils {
 
+    fun Activity.showCustomUI() {
+        window.statusBarColor = 0x00000000
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+
     fun Activity.hideSoftKeyboard() {
         currentFocus?.let {
             val inputMethodManager = ContextCompat.getSystemService(

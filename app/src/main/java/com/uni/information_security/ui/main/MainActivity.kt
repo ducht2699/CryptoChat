@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
+import com.uni.information_security.utils.CommonUtils
+import com.uni.information_security.utils.CommonUtils.showCustomUI
 import com.uni.information_security.view_model.ViewModelFactory
 
 
@@ -32,7 +34,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     override fun initView() {
-
+        showCustomUI()
+        binding.toolbar.tvTitleToolbar.text = resources.getString(R.string.app_name)
     }
 
     override fun initListener() {

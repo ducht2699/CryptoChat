@@ -59,7 +59,7 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.FullScreen">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

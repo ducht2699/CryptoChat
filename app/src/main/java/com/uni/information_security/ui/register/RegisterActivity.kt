@@ -45,11 +45,13 @@ class RegisterActivity : BaseActivity<LoginViewModel, ActivityRegisterBinding>()
 
     override fun initView() {
         binding.toolbar.tvTitleToolbar.text = resources.getString(R.string.str_register)
+        binding.toolbar.lnlBack.visibility = View.GONE
+        binding.toolbar.lnlRight.visibility = View.GONE
     }
 
     override fun initListener() {
         binding.nestedScrollView.setOnClickListener(this)
-        binding.toolbar.rltBack.setOnClickListener(this)
+        binding.toolbar.lnlBack.setOnClickListener(this)
         binding.btnFinish.setOnClickListener(this)
     }
 
