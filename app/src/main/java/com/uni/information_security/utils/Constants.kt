@@ -18,3 +18,7 @@ const val EMPTY_STRING = ""
 const val USER_PATH = "Users"
 
 var USER_DATA: User? = null
+const val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 553
+
+const val ALLOWED_CHARACTERS =
+    "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"

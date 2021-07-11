@@ -51,6 +51,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), View
             loginResponse.observe(this@LoginActivity, { result ->
                 if (result) {
                     startActivity(MainActivity.getIntent(this@LoginActivity))
+                    finishAffinity()
                 }
             })
         }

@@ -1,7 +1,10 @@
 package com.uni.information_security.ui.login
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +20,9 @@ import com.uni.information_security.model.response.chat.User
 import com.uni.information_security.network.Api
 import com.uni.information_security.utils.*
 import com.uni.information_security.view_model.BaseViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -111,7 +117,7 @@ class LoginViewModel() : BaseViewModel() {
                     )
 
                     database.child(USER_PATH).child(id!!)
-                        .setValue(User(id, request.username, passEnc))
+                        .setValue(User(id, request.username, passEnc, request.avatar))
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 createAccountResponse.value = true
@@ -126,6 +132,36 @@ class LoginViewModel() : BaseViewModel() {
             .addOnCanceledListener {
                 onRetrievePostListFinish()
                 errorMessage.postValue(R.string.str_error_on_get_data)
+            }
+    }
+
+    var createImageResponse: MutableLiveData<Bitmap> = MutableLiveData()
+    fun createImage(
+        activity: Activity,
+        data: List<com.esafirm.imagepicker.model.Image>
+    ) {
+        var isRun = true
+        var isFinish = true
+        var bitmap: Bitmap? = null
+        Observable.fromIterable(data)
+            .map {
+                if (isRun) {
+                    isRun = false
+                    for (i: Int in data.indices) {
+                        val file = CommonUtils.createRotatedFile(data[i].path, activity)
+                        bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    }
+                }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { onRetrievePostListStart() }
+            .doOnTerminate { onRetrievePostListFinish() }
+            .subscribe {
+                if (isFinish) {
+                    isFinish = false
+                    createImageResponse.postValue(bitmap)
+                }
             }
     }
 

@@ -6,14 +6,19 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.*
@@ -27,13 +32,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.uni.information_security.R
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,6 +51,128 @@ object CommonUtils {
         window.statusBarColor = 0x00000000
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+    fun createRotatedFile(filePath: String, activity: Activity): File {
+        val ei = ExifInterface(filePath)
+        val orientation: Int = ei.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_UNDEFINED
+        )
+
+        val bitmap = BitmapFactory.decodeFile(filePath)
+
+        val rotatedBitmap = when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90f, activity)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180f, activity)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270f, activity)
+            else -> rotateImage(bitmap, 0f, activity)
+        }
+        return rotatedBitmap.persistImage(getRandomString(), activity)
+    }
+
+    private fun getRandomString(): String {
+        val random = Random()
+        val sb = StringBuilder(20)
+        for (i in 0 until 20)
+            sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
+        return sb.toString() + System.currentTimeMillis()
+    }
+
+
+    private fun Bitmap?.persistImage(name: String, context: Context): File {
+        val filesDir: File = context.filesDir
+        val imageFile = File(filesDir, "$name.png")
+        val os: OutputStream
+        try {
+            os = FileOutputStream(imageFile)
+            this?.compress(Bitmap.CompressFormat.PNG, 100, os)
+            os.flush()
+            os.close()
+        } catch (e: Exception) {
+            Log.e(javaClass.simpleName, "Error writing bitmap", e)
+        }
+        return imageFile
+    }
+
+    private fun rotateImage(source: Bitmap, angle: Float, activity: Activity): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        val bitmap = Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
+        val bitmapDrawable = BitmapDrawable(activity.resources, bitmap)
+        val width: Int = bitmapDrawable.intrinsicWidth
+        val height: Int = bitmapDrawable.intrinsicHeight
+        val ratioImage = width.toDouble() / height
+        val b = bitmapDrawable.bitmap
+
+        var widthResize = width
+        var heightResize = height
+        if (ratioImage > 1) { // ảnh ngang
+            if (width > 1920) {
+                widthResize = 1920
+                heightResize = (widthResize / ratioImage).toInt()
+            }
+        } else { // ảnh dọc
+            if (height > 1920) {
+                heightResize = 1920
+                widthResize = (heightResize * ratioImage).toInt()
+            }
+        }
+        return Bitmap.createScaledBitmap(b, widthResize, heightResize, false)
+    }
+
+    fun convertBitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return android.util.Base64.encodeToString(byteArray, android.util.Base64.DEFAULT)
+    }
+
+    fun setImageFromBase64(
+        url: String?,
+        img: ImageView, context: Context
+    ) {
+        if (url != null) {
+            var base64Image = url
+            val arr = url.split(",".toRegex()).toTypedArray()
+            if (arr.size > 1) {
+                base64Image = url.split(",".toRegex()).toTypedArray()[1]
+            }
+            try {
+                val decodedString =
+                    android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+                val decodedByte =
+                    BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                if (decodedByte != null) {
+                    var imgWidth = 0
+                    var imgHeight = 0
+                    imgWidth = if (decodedByte.width > 1480) {
+                        (decodedByte.width / 1.2).toInt()
+                    } else {
+                        decodedByte.width
+                    }
+
+                    imgHeight = if (decodedByte.height > 1000) {
+                        (decodedByte.height / 1.2).toInt()
+                    } else {
+                        decodedByte.height
+                    }
+
+                    img.setImageBitmap(
+                        Bitmap.createScaledBitmap(
+                            decodedByte,
+                            imgWidth,
+                            imgHeight,
+                            false
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                Glide.with(context).load(R.drawable.ic_avata_default).into(img)
+            }
+        }
     }
 
     fun Activity.hideSoftKeyboard() {
