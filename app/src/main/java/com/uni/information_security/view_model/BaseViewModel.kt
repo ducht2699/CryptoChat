@@ -13,6 +13,7 @@ import com.uni.information_security.injection.ViewModelInjector
 import com.uni.information_security.model.response.Message
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
+import com.uni.information_security.ui.personal.PersonalViewModel
 import com.uni.information_security.utils.GsonUtils
 import com.uni.information_security.utils.myapp
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -48,6 +49,7 @@ abstract class BaseViewModel : ViewModel() {
         when (this) {
             is LoginViewModel -> injector.inject(this)
             is MainViewModel -> injector.inject(this)
+            is PersonalViewModel -> injector.inject(this)
         }
     }
 

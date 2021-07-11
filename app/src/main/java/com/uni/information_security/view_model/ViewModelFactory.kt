@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
+import com.uni.information_security.ui.personal.PersonalViewModel
 
 class ViewModelFactory(private val context: Context): ViewModelProvider.Factory{
 
@@ -15,6 +16,9 @@ class ViewModelFactory(private val context: Context): ViewModelProvider.Factory{
         }
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel() as T
+        }
+        if (modelClass.isAssignableFrom(PersonalViewModel::class.java)) {
+            return PersonalViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
 

@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.facebook.common.Common
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
@@ -35,7 +36,7 @@ class LoginViewModel() : BaseViewModel() {
     @Inject
     lateinit var api: Api
 
-    val database = Firebase.database.reference
+    val database = FirebaseDatabase.getInstance().reference
 
     val loginResponse = MutableLiveData<Boolean>()
     val initUserResponse = MutableLiveData<Boolean>()

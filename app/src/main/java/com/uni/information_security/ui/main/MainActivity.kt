@@ -13,6 +13,7 @@ import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
 import com.uni.information_security.interfaces.IMainCallBack
 import com.uni.information_security.ui.main.fragment.GroupFragment
+import com.uni.information_security.ui.personal.PersonalActivity
 import com.uni.information_security.utils.CommonUtils
 import com.uni.information_security.utils.CommonUtils.showCustomUI
 import com.uni.information_security.utils.USER_DATA
@@ -22,14 +23,13 @@ import com.uni.information_security.view_model.ViewModelFactory
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCallBack,
     View.OnClickListener {
 
-    val TAG = "MainActivity"
-
     companion object {
         fun getIntent(
             context: Context
         ): Intent {
             return Intent(context, MainActivity::class.java)
         }
+        const val CODE_START_PERSONAL = 123
     }
 
     private lateinit var fm: FragmentManager
@@ -60,6 +60,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
 
     override fun initListener() {
         binding.toolbar.lnlRight.setOnClickListener(this)
+        binding.toolbar.imvAvatar.setOnClickListener(this)
     }
 
     override fun observerLiveData() {
@@ -80,8 +81,18 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.lnl_right -> {
+            R.id.imv_avatar -> {
+                if (!isDoubleClick()) {
+                    startActivityForResult(Intent(this, PersonalActivity::class.java), CODE_START_PERSONAL)
+                }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CODE_START_PERSONAL && resultCode == RESULT_OK) {
+            CommonUtils.setImageFromBase64(USER_DATA?.avatar, binding.toolbar.imvAvatar, this)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

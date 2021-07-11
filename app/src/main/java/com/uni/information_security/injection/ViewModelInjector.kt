@@ -2,6 +2,7 @@ package com.uni.information_security.injection
 
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
+import com.uni.information_security.ui.personal.PersonalViewModel
 import dagger.Component
 
 /**
@@ -16,6 +17,7 @@ interface ViewModelInjector {
      */
     fun inject(loginViewModel: LoginViewModel)
     fun inject(homeViewModel: MainViewModel)
+    fun inject(personalViewModel: PersonalViewModel)
 
     @Component.Builder
     interface Builder {

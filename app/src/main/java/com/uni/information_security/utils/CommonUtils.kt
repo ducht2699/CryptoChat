@@ -149,13 +149,13 @@ object CommonUtils {
                     var imgWidth = 0
                     var imgHeight = 0
                     imgWidth = if (decodedByte.width > 1480) {
-                        (decodedByte.width / 1.2).toInt()
+                        (decodedByte.width / 1f).toInt()
                     } else {
                         decodedByte.width
                     }
 
                     imgHeight = if (decodedByte.height > 1000) {
-                        (decodedByte.height / 1.2).toInt()
+                        (decodedByte.height / 1f).toInt()
                     } else {
                         decodedByte.height
                     }
