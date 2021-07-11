@@ -66,7 +66,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
             userResponse.observe(this@GroupFragment, { data ->
                 userList.clear()
                 userList.addAll(data)
-                userAdapter.notifyDataSetChanged()
+                userAdapter.notifyItemInserted(userList.size - 1)
             })
         }
     }

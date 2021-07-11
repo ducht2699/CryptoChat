@@ -7,12 +7,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
 import com.uni.information_security.interfaces.IMainCallBack
 import com.uni.information_security.ui.main.fragment.GroupFragment
+import com.uni.information_security.utils.CommonUtils
 import com.uni.information_security.utils.CommonUtils.showCustomUI
+import com.uni.information_security.utils.USER_DATA
 import com.uni.information_security.view_model.ViewModelFactory
 
 
@@ -45,6 +48,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
         binding.toolbar.tvTitleToolbar.text = resources.getString(R.string.app_name)
         fm = supportFragmentManager
         replaceFragment(GroupFragment.getInstance(this))
+        //avatar
+        CommonUtils.setImageFromBase64(USER_DATA?.avatar, binding.toolbar.imvAvatar, this)
     }
 
     private fun replaceFragment(f: Fragment) {
