@@ -30,5 +30,6 @@
     <string name="str_false_verification">Xác thực mật khẩu không khớp!</string>
     <string name="str_create_auth_error">Đăng ký thất bại, vui long thử lại</string>
     <string name="str_success">Thành công!</string>
+    <string name="str_tap_to_select">Nhấn để chọn</string>
 
 </resources>

@@ -15,3 +15,7 @@ var myapp: ApplicationComponent? = null
 
 const val EMPTY_STRING = ""
 
+const val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 553
+
+const val ALLOWED_CHARACTERS =
+    "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
