@@ -45,8 +45,9 @@ class RegisterActivity : BaseActivity<LoginViewModel, ActivityRegisterBinding>()
 
     override fun initView() {
         binding.toolbar.tvTitleToolbar.text = resources.getString(R.string.str_register)
-        binding.toolbar.lnlBack.visibility = View.GONE
+        binding.toolbar.lnlBack.visibility = View.VISIBLE
         binding.toolbar.lnlRight.visibility = View.GONE
+        binding.toolbar.cvUser.visibility = View.GONE
     }
 
     override fun initListener() {
@@ -74,7 +75,7 @@ class RegisterActivity : BaseActivity<LoginViewModel, ActivityRegisterBinding>()
             R.id.nestedScrollView -> {
                 hideSoftKeyboard()
             }
-            R.id.rlt_back -> {
+            R.id.lnl_back -> {
                 hideSoftKeyboard()
                 if (!isDoubleClick())
                     finish()

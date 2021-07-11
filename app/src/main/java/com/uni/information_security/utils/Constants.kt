@@ -15,3 +15,6 @@ var myapp: ApplicationComponent? = null
 
 const val EMPTY_STRING = ""
 
+const val USER_PATH = "Users"
+
+var USER_DATA: User? = null

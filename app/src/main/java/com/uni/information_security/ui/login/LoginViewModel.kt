@@ -22,9 +22,6 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class LoginViewModel() : BaseViewModel() {
-    companion object {
-        const val USER_PATH = "Users"
-    }
 
     @Inject
     lateinit var dataManager: DataManager
@@ -52,6 +49,7 @@ class LoginViewModel() : BaseViewModel() {
                     if (request.username == user?.username && request.password == password) {
                         dataManager.save(PREF_USERNAME, user?.username)
                         dataManager.save(PREF_PASS, password)
+                        USER_DATA = user
                         dataManager.save(PREF_AUTO_LOGIN, true)
                         loginResponse.postValue(true)
                         onRetrievePostListFinish()
