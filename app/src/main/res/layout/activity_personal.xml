@@ -18,7 +18,7 @@
             android:layout_width="@dimen/dp150"
             android:layout_height="@dimen/dp150"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp44"
+            android:layout_marginTop="@dimen/dp24"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="@dimen/dp100"
             app:cardElevation="0dp">
@@ -98,21 +98,102 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/dp16"
                 android:layout_toEndOf="@id/cv_indicator"
-                android:text="@string/str_update_info"
+                android:text="@string/str_update_password"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/sp15" />
         </RelativeLayout>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_old_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp40"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginEnd="@dimen/dp20"
+            android:hint="@string/str_old_password"
+            android:visibility="invisible"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_old_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="@dimen/dp12"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_new_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp40"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginEnd="@dimen/dp20"
+            android:hint="@string/str_new_password"
+            android:visibility="invisible"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_new_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="@dimen/dp12"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_verify_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp40"
+
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginEnd="@dimen/dp20"
+            android:hint="@string/str_verify_password"
+            android:visibility="invisible"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_verify_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="@dimen/dp12"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
-            android:id="@+id/btn_log_out"
-            android:text="@string/str_log_out"
+            android:id="@+id/btn_change_password"
             style="@style/Button"
             android:layout_width="match_parent"
-            android:textSize="@dimen/sp18"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp180"
+            android:layout_marginStart="@dimen/dp40"
+            android:layout_marginTop="@dimen/dp12"
+            android:layout_marginEnd="@dimen/dp20"
+            android:backgroundTint="#FFCA54"
+            android:text="@string/str_change_password"
+            android:textSize="@dimen/sp18"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btn_log_out"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp20"
-            android:layout_marginEnd="@dimen/dp20" />
+            android:layout_marginTop="@dimen/dp24"
+            android:layout_marginEnd="@dimen/dp20"
+            android:text="@string/str_log_out"
+            android:textSize="@dimen/sp18" />
 
 
     </LinearLayout>

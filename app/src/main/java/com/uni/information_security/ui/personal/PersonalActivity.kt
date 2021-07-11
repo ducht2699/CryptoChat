@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.esafirm.imagepicker.features.ImagePicker
@@ -52,6 +53,7 @@ class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding
         binding.toolbar.lnlBack.setOnClickListener(this)
         binding.imvAvatarHolder.setOnClickListener(this)
         binding.btnLogOut.setOnClickListener(this)
+        binding.rltUpdateInfo.setOnClickListener(this)
     }
 
     override fun observerLiveData() {
@@ -78,6 +80,21 @@ class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding
                     viewModel.logOut()
                     startActivity(LoginActivity.getIntent(this))
                     finishAffinity()
+                }
+            }
+            R.id.rlt_update_info -> {
+                if (!isDoubleClick()) {
+                    if (binding.tilOldPass.isVisible) {
+                        binding.tilOldPass.visibility = View.INVISIBLE
+                        binding.tilNewPass.visibility = View.INVISIBLE
+                        binding.tilVerifyPass.visibility = View.INVISIBLE
+                        binding.btnChangePassword.visibility = View.INVISIBLE
+                    } else {
+                        binding.tilOldPass.visibility = View.VISIBLE
+                        binding.tilNewPass.visibility = View.VISIBLE
+                        binding.tilVerifyPass.visibility = View.VISIBLE
+                        binding.btnChangePassword.visibility = View.VISIBLE
+                    }
                 }
             }
         }
