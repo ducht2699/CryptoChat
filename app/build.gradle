@@ -9,7 +9,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.uni.information_security"
+        applicationId "com.vnsoft.exam"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -69,10 +69,6 @@ dependencies {
 
     // Data binding
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.0'
-    implementation 'com.google.firebase:firebase-database:19.2.1'
-    implementation 'com.google.android.material:material:1.2.1'
     kapt "com.android.databinding:compiler:3.1.4"
 
     // ViewModel

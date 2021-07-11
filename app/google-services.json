@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "442401360493",
-    "project_id": "cryptochat-f0b33",
-    "storage_bucket": "cryptochat-f0b33.appspot.com"
+    "project_number": "784144847988",
+    "firebase_url": "https://mmo-news-273514.firebaseio.com",
+    "project_id": "mmo-news-273514",
+    "storage_bucket": "mmo-news-273514.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:442401360493:android:4588b1504dfddead5c8d64",
+        "mobilesdk_app_id": "1:784144847988:android:36c0511288a22f39a56d21",
         "android_client_info": {
-          "package_name": "com.uni.information_security"
+          "package_name": "com.vnsoft.exam"
         }
       },
       "oauth_client": [
         {
-          "client_id": "442401360493-lf392qok6133mjo5ivi6dt45bk5q74p2.apps.googleusercontent.com",
+          "client_id": "784144847988-olkh1a722u3eqg1t6tf450fijj17c86p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbFJlMSfeowTSIlbQP34jiThpvmsWUCUs"
+          "current_key": "AIzaSyD3oSfaIxAcj74hV-EnaqMXmEp2cs3L_XA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "442401360493-lf392qok6133mjo5ivi6dt45bk5q74p2.apps.googleusercontent.com",
+              "client_id": "784144847988-olkh1a722u3eqg1t6tf450fijj17c86p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
