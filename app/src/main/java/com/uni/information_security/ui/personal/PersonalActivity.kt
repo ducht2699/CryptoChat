@@ -1,17 +1,15 @@
 package com.uni.information_security.ui.personal
 
-import android.app.Person
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.os.Build
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.features.ReturnMode
 import com.uni.information_security.R
@@ -21,14 +19,15 @@ import com.uni.information_security.model.response.chat.User
 import com.uni.information_security.ui.login.LoginActivity
 import com.uni.information_security.ui.register.RegisterActivity
 import com.uni.information_security.utils.CommonUtils
+import com.uni.information_security.utils.CommonUtils.hideSoftKeyboard
 import com.uni.information_security.utils.CommonUtils.showCustomUI
+import com.uni.information_security.utils.EMPTY_STRING
 import com.uni.information_security.utils.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
 import com.uni.information_security.utils.USER_DATA
 import java.io.File
 
 class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding>(),
     View.OnClickListener {
-
 
 
     override fun getContentLayout(): Int {
@@ -54,17 +53,29 @@ class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding
         binding.imvAvatarHolder.setOnClickListener(this)
         binding.btnLogOut.setOnClickListener(this)
         binding.rltUpdateInfo.setOnClickListener(this)
+        binding.btnChangePassword.setOnClickListener(this)
     }
 
     override fun observerLiveData() {
-        viewModel.setAvatarResult.observe(this, {avatar ->
+        viewModel.setAvatarResult.observe(this, { avatar ->
             CommonUtils.setImageFromBase64(avatar, binding.imvAvatar, this)
             setResult(RESULT_OK)
+        })
+        viewModel.changePasswordResponse.observe(this, {result ->
+            USER_DATA = User(USER_DATA?.id, USER_DATA?.username, result, USER_DATA?.avatar)
+            Toast.makeText(this, resources.getString(R.string.str_change_password_success), Toast.LENGTH_SHORT).show()
+            binding.edtNewPassword.text?.clear()
+            binding.edtOldPassword.text?.clear()
+            binding.edtVerifyPassword.text?.clear()
+            binding.tilOldPass.visibility = View.INVISIBLE
+            binding.tilNewPass.visibility = View.INVISIBLE
+            binding.tilVerifyPass.visibility = View.INVISIBLE
+            binding.btnChangePassword.visibility = View.INVISIBLE
         })
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.lnl_back -> {
                 if (!isDoubleClick()) {
                     finish()
@@ -83,6 +94,7 @@ class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding
                 }
             }
             R.id.rlt_update_info -> {
+                hideSoftKeyboard()
                 if (!isDoubleClick()) {
                     if (binding.tilOldPass.isVisible) {
                         binding.tilOldPass.visibility = View.INVISIBLE
@@ -97,8 +109,38 @@ class PersonalActivity : BaseActivity<PersonalViewModel, ActivityPersonalBinding
                     }
                 }
             }
+            R.id.btn_change_password -> {
+                hideSoftKeyboard()
+                val oldPass = binding.edtOldPassword.text.toString()
+                val oldPassDec = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    CommonUtils.decrypt(USER_DATA?.password, USER_DATA?.id)
+                } else {
+                    EMPTY_STRING
+                }
+                val newPass = binding.edtNewPassword.text.toString()
+                val verifyPass = binding.edtVerifyPassword.text.toString()
+                if (oldPass == EMPTY_STRING || newPass == EMPTY_STRING || verifyPass == EMPTY_STRING) {
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.str_missing_input),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (oldPass != oldPassDec) {
+                    Toast.makeText(this, resources.getString(R.string.str_wrong_password), Toast.LENGTH_SHORT).show()
+                } else if (verifyPass != newPass) {
+                    Toast.makeText(this, resources.getString(R.string.str_false_verification), Toast.LENGTH_SHORT).show()
+                } else {
+                    val newPassEnc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        CommonUtils.encrypt(newPass, USER_DATA?.id)
+                    } else {
+                        EMPTY_STRING
+                    }
+                    viewModel.changePassword(newPassEnc?: EMPTY_STRING)
+                }
+            }
         }
     }
+
     private fun openImagePicker() {
         ImagePicker.create(this)
             .returnMode(ReturnMode.ALL)

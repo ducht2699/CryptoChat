@@ -40,5 +40,7 @@
     <string name="str_old_password">Mật khẩu cũ</string>
     <string name="str_new_password">Mật khẩu mới</string>
     <string name="str_change_password">Đổi mật khẩu</string>
+    <string name="str_wrong_password">Mật khẩu cũ không đúng!</string>
+    <string name="str_change_password_success">Đổi mật khẩu thành công!</string>
 
 </resources>

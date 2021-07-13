@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
@@ -67,5 +68,22 @@ class PersonalViewModel : BaseViewModel() {
 
     fun logOut() {
         dataManager.save(PREF_AUTO_LOGIN, false)
+    }
+
+    val changePasswordResponse = MutableLiveData<String>()
+    fun changePassword(newPassEnc: String) {
+        onRetrievePostListStart()
+        val tempUser = User(USER_DATA?.id, USER_DATA?.username, newPassEnc, USER_DATA?.avatar)
+        database.child(USER_PATH).child(USER_DATA?.id ?: EMPTY_STRING).setValue(tempUser)
+            .addOnCompleteListener {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    dataManager.save(PREF_PASS, CommonUtils.decrypt(newPassEnc, USER_DATA?.id))
+                }
+                changePasswordResponse.postValue(newPassEnc)
+                onRetrievePostListFinish()
+            }
+            .addOnCanceledListener {
+                onRetrievePostListFinish()
+            }
     }
 }
