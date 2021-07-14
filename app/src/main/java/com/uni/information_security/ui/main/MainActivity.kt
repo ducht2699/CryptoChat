@@ -12,6 +12,7 @@ import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
 import com.uni.information_security.interfaces.IMainCallBack
+import com.uni.information_security.ui.login.LoginActivity
 import com.uni.information_security.ui.main.fragment.GroupFragment
 import com.uni.information_security.ui.personal.PersonalActivity
 import com.uni.information_security.utils.CommonUtils
@@ -77,6 +78,15 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
             binding.toolbar.imvRight.visibility = View.VISIBLE
             binding.toolbar.imvRight.setImageResource(R.drawable.ic_info)
         }
+    }
+
+    override fun userUnavailable() {
+        startActivity(LoginActivity.getIntent(this))
+        finishAffinity()
+    }
+
+    override fun updateUIUser() {
+        CommonUtils.setImageFromBase64(USER_DATA?.avatar, binding.toolbar.imvAvatar, this)
     }
 
     override fun onClick(v: View?) {

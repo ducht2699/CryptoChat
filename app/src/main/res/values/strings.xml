@@ -42,5 +42,6 @@
     <string name="str_change_password">Đổi mật khẩu</string>
     <string name="str_wrong_password">Mật khẩu cũ không đúng!</string>
     <string name="str_change_password_success">Đổi mật khẩu thành công!</string>
+    <string name="str_account_unavailable">Tài khoản bị vô hiệu hoá!</string>
 
 </resources>

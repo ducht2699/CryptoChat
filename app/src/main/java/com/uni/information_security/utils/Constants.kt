@@ -16,6 +16,7 @@ var myapp: ApplicationComponent? = null
 const val EMPTY_STRING = ""
 
 const val USER_PATH = "Users"
+const val GROUP_PATH = "Groups"
 
 var USER_DATA: User? = null
 const val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 553
