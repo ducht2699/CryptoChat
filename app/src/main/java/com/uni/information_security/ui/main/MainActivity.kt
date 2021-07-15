@@ -12,6 +12,7 @@ import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
 import com.uni.information_security.interfaces.IMainCallBack
+import com.uni.information_security.ui.create_group.CreateGroupActivity
 import com.uni.information_security.ui.login.LoginActivity
 import com.uni.information_security.ui.main.fragment.GroupFragment
 import com.uni.information_security.ui.personal.PersonalActivity
@@ -94,6 +95,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
             R.id.imv_avatar -> {
                 if (!isDoubleClick()) {
                     startActivityForResult(Intent(this, PersonalActivity::class.java), CODE_START_PERSONAL)
+                }
+            }
+            R.id.lnl_right -> {
+                if (!isDoubleClick()) {
+                    startActivity(CreateGroupActivity.getIntent(this))
+                    finishAffinity()
                 }
             }
         }

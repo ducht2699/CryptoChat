@@ -12,12 +12,8 @@ import com.uni.information_security.base.BaseFragment
 import com.uni.information_security.databinding.FragmentGroupBinding
 import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.model.response.chat.User
-import com.uni.information_security.ui.login.LoginActivity
-import com.uni.information_security.ui.login.LoginViewModel
-import com.uni.information_security.ui.main.MainActivity
 import com.uni.information_security.ui.main.MainViewModel
 import com.uni.information_security.utils.USER_DATA
-import com.uni.information_security.utils.USER_PATH
 
 class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
     UserAdapter.IUserCallBack {
@@ -75,10 +71,10 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
 
     override fun observerLiveData() {
         viewModel.apply {
-            userResponse.observe(this@GroupFragment, { data ->
+            userAddResponse.observe(this@GroupFragment, { data ->
                 userList.clear()
                 userList.addAll(data)
-                userAdapter.notifyItemRangeInserted(0, userList.size)
+                userAdapter.notifyDataSetChanged()
             })
             userChangeResponse.observe(this@GroupFragment, { data ->
                 if (data?.id == USER_DATA?.id) {
@@ -120,10 +116,37 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
                     userAdapter.removeItem(pos)
                 }
             })
-            groupsResponse.observe(this@GroupFragment, { data ->
+
+            groupAddResponse.observe(this@GroupFragment, { data ->
                 groupList.clear()
                 groupList.addAll(data)
                 groupAdapter.notifyItemRangeInserted(0, groupList.size)
+            })
+            groupChangeResponse.observe(this@GroupFragment, { data ->
+                var pos = -1
+                for (group in groupList) {
+                    if (data?.id == group?.id) {
+                        pos = groupList.indexOf(group)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    groupList[pos] = data
+                    groupAdapter.notifyItemChanged(pos)
+                }
+
+            })
+            groupRemovedResponse.observe(this@GroupFragment, { data ->
+                var pos = -1
+                for (group in groupList) {
+                    if (data?.id == group?.id) {
+                        pos = groupList.indexOf(group)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    groupAdapter.removeItem(pos)
+                }
             })
         }
     }

@@ -1,5 +1,6 @@
 package com.uni.information_security.injection
 
+import com.uni.information_security.ui.create_group.CreateGroupViewModel
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
 import com.uni.information_security.ui.personal.PersonalViewModel
@@ -18,6 +19,7 @@ interface ViewModelInjector {
     fun inject(loginViewModel: LoginViewModel)
     fun inject(homeViewModel: MainViewModel)
     fun inject(personalViewModel: PersonalViewModel)
+    fun inject(createGroupViewModel: CreateGroupViewModel)
 
     @Component.Builder
     interface Builder {
