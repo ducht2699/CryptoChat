@@ -40,7 +40,7 @@ class CreateGroupActivity : BaseActivity<CreateGroupViewModel, ActivityCreateGro
 
     private val userList = mutableListOf<User?>()
     private val userSelectedList = mutableListOf<User?>()
-    private val userAdapter = UserCreateRoomAdapter(userList, this)
+    private val userAdapter = UserCreateRoomAdapter(userList, this, ArrayList(), true)
 
     override fun getContentLayout(): Int {
         return R.layout.activity_create_group

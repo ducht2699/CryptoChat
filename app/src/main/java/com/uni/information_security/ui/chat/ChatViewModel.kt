@@ -63,6 +63,9 @@ class ChatViewModel : BaseViewModel() {
 
     private val userInfoList = mutableListOf<User?>()
     val userInfoResponse = MutableLiveData<List<User?>>()
+
+    private val userInGroupList = mutableListOf<UserInGroup?>()
+    val userInGroupResponse = MutableLiveData<List<UserInGroup?>>()
     fun getUsers() {
         onRetrievePostListStart()
         database.child(USER_PATH).get().addOnCompleteListener {
@@ -73,4 +76,16 @@ class ChatViewModel : BaseViewModel() {
             userInfoResponse.value = userInfoList
         }
     }
+    fun getUserInGroup() {
+        onRetrievePostListStart()
+        database.child(GROUP_PATH).child(GROUP_DATA?.id!!).child(USER_IN_GROUP_PATH).get().addOnCompleteListener {
+            for (sns in it.result?.children ?: ArrayList()) {
+                val user = sns.getValue<UserInGroup>()
+                userInGroupList.add(user)
+            }
+            userInGroupResponse.value = userInGroupList
+        }
+    }
+
+
 }

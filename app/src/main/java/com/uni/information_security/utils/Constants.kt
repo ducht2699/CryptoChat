@@ -21,6 +21,9 @@ const val GROUP_PATH = "Groups"
 const val MESSAGE_PATH = "messageList"
 const val USER_IN_GROUP_PATH = "userList"
 
+const val EXTRA_IS_OWNER = "EXTRA_IS_OWNER"
+const val EXTRA_IS_OUTER = "EXTRA_IS_OUTER"
+
 var USER_DATA: User? = null
 var GROUP_DATA: Group? = null
 const val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 553

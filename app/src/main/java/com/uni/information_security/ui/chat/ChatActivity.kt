@@ -1,8 +1,8 @@
 package com.uni.information_security.ui.chat
 
+import android.content.Intent
 import android.os.Build
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
@@ -13,6 +13,7 @@ import com.uni.information_security.databinding.ActivityChatBinding
 import com.uni.information_security.model.response.chat.Message
 import com.uni.information_security.model.response.chat.User
 import com.uni.information_security.model.response.chat.UserInGroup
+import com.uni.information_security.ui.chat_info.ChatInfoActivity
 import com.uni.information_security.ui.main.MainActivity
 import com.uni.information_security.utils.*
 import com.uni.information_security.utils.CommonUtils.showCustomUI
@@ -78,6 +79,25 @@ class ChatActivity : BaseActivity<ChatViewModel, ActivityChatBinding>() {
                 }
             }
         }
+        binding.toolbar.lnlRight.setOnClickListener {
+            if (!isDoubleClick()) {
+                for (user in userInGroupList) {
+                    if (user?.id == USER_DATA?.id) {
+                        val intent = Intent(this, ChatInfoActivity::class.java)
+                        intent.putExtra(EXTRA_IS_OWNER, user?.owner)
+                        intent.putExtra(EXTRA_IS_OUTER, false)
+                        startActivity(intent)
+                        finishAffinity()
+                        return@setOnClickListener
+                    }
+                }
+                val intent = Intent(this, ChatInfoActivity::class.java)
+                intent.putExtra(EXTRA_IS_OWNER, false)
+                intent.putExtra(EXTRA_IS_OUTER, true)
+                startActivity(intent)
+                finishAffinity()
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -105,6 +125,11 @@ class ChatActivity : BaseActivity<ChatViewModel, ActivityChatBinding>() {
             userInfoResponse.observe(this@ChatActivity, { data ->
                 userInfoList.clear()
                 userInfoList.addAll(data)
+                getUserInGroup()
+            })
+            userInGroupResponse.observe(this@ChatActivity, {data->
+                userInGroupList.clear()
+                userInGroupList.addAll(data)
             })
         }
     }

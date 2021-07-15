@@ -1,6 +1,7 @@
 package com.uni.information_security.injection
 
 import com.uni.information_security.ui.chat.ChatViewModel
+import com.uni.information_security.ui.chat_info.ChatInfoViewModel
 import com.uni.information_security.ui.create_group.CreateGroupViewModel
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
@@ -22,6 +23,7 @@ interface ViewModelInjector {
     fun inject(personalViewModel: PersonalViewModel)
     fun inject(createGroupViewModel: CreateGroupViewModel)
     fun inject(chatViewModel: ChatViewModel)
+    fun inject(chatInfoViewModel: ChatInfoViewModel)
 
     @Component.Builder
     interface Builder {
