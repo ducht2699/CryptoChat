@@ -39,21 +39,9 @@
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/sp18"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cv_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cv_avatar"
             app:layout_constraintTop_toTopOf="@+id/cv_avatar" />
-
-        <TextView
-            android:id="@+id/tv_last_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp16"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/colorBlack"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/tv_group_title"
-            app:layout_constraintStart_toEndOf="@id/cv_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/tv_group_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

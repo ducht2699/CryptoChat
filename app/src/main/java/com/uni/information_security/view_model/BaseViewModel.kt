@@ -11,6 +11,7 @@ import com.uni.information_security.injection.DaggerViewModelInjector
 import com.uni.information_security.injection.NetworkModule
 import com.uni.information_security.injection.ViewModelInjector
 import com.uni.information_security.model.response.Message
+import com.uni.information_security.ui.chat.ChatViewModel
 import com.uni.information_security.ui.create_group.CreateGroupViewModel
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainViewModel
@@ -52,6 +53,7 @@ abstract class BaseViewModel : ViewModel() {
             is MainViewModel -> injector.inject(this)
             is PersonalViewModel -> injector.inject(this)
             is CreateGroupViewModel -> injector.inject(this)
+            is ChatViewModel -> injector.inject(this)
         }
     }
 

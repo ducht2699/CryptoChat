@@ -1,5 +1,6 @@
 package com.uni.information_security.ui.main.fragment
 
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -12,11 +13,12 @@ import com.uni.information_security.base.BaseFragment
 import com.uni.information_security.databinding.FragmentGroupBinding
 import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.model.response.chat.User
+import com.uni.information_security.ui.chat.ChatActivity
 import com.uni.information_security.ui.main.MainViewModel
 import com.uni.information_security.utils.USER_DATA
 
 class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
-    UserAdapter.IUserCallBack {
+    UserAdapter.IUserCallBack, GroupAdapter.IOnGroupClick {
 
     companion object {
         fun getInstance(iMainCallBack: IMainCallBack): Fragment {
@@ -30,7 +32,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
     private val userAdapter = UserAdapter(userList, this)
 
     private val groupList = mutableListOf<Group?>()
-    private val groupAdapter = GroupAdapter(groupList)
+    private val groupAdapter = GroupAdapter(groupList, this)
 
     private lateinit var iMainCallBack: IMainCallBack
 
@@ -153,6 +155,10 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
 
     override fun onUserClick(user: User?) {
         Toast.makeText(context, user?.username, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onGroupClick(data: Group?) {
+     iMainCallBack.changeFragmentCallBack(false, data?.id)
     }
 
 }

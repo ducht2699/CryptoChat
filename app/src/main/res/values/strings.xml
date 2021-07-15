@@ -47,5 +47,5 @@
     <string name="str_error">Có lỗi xảy ra, xin thử lại!</string>
     <string name="str_group_name">Tên phòng chat</string>
     <string name="str_failed">Thao tác thất bại, mời thử lại!</string>
-<string name="str_group_chat">Nhóm của %s</string>
+    <string name="str_group_chat">Nhóm của %s</string>
 </resources>

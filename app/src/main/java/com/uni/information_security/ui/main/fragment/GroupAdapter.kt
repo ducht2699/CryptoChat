@@ -10,14 +10,20 @@ import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.utils.CommonUtils
 import com.uni.information_security.utils.EMPTY_STRING
 
-class GroupAdapter(dataSet: MutableList<Group?>?): BaseRecyclerAdapter<Group, GroupAdapter.ViewHolder>(dataSet) {
+class GroupAdapter(dataSet: MutableList<Group?>?, val iOnGroupClick: IOnGroupClick): BaseRecyclerAdapter<Group, GroupAdapter.ViewHolder>(dataSet) {
     inner class ViewHolder(val binding: LayoutGroupItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: Group?, position: Int) {
             binding.tvGroupTitle.text = data?.name?: EMPTY_STRING
             CommonUtils.setImageFromBase64(data?.avatar?: EMPTY_STRING, binding.imvAvatar, binding.root.context)
-            binding.tvLastMessage.text = data?.messageList?.get(data.messageList.size)?.content?: EMPTY_STRING
+            binding.root.setOnClickListener{
+                iOnGroupClick.onGroupClick(data)
+            }
         }
 
+    }
+
+    interface IOnGroupClick {
+        fun onGroupClick(data: Group?)
     }
 
     override fun getLayoutResourceItem(): Int {

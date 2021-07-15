@@ -17,8 +17,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".ui.create_group.CreateGroupActivity"
+        <activity android:name=".ui.chat.ChatActivity"
             android:theme="@style/AppTheme.FullScreen"></activity>
+        <activity
+            android:name=".ui.create_group.CreateGroupActivity"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".ui.personal.PersonalActivity"
             android:theme="@style/AppTheme.FullScreen" />
