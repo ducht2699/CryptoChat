@@ -26,7 +26,7 @@
                 android:drawablePadding="@dimen/dp8"
                 android:hint="@string/str_search"
                 android:padding="@dimen/dp8"
-                android:textColor="@color/color_bg_search_edt"
+                android:textColor="@color/colorBlack"
                 android:textColorHint="?attr/colorControlNormal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

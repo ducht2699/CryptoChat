@@ -3,6 +3,8 @@ package com.uni.information_security.ui.main.fragment
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.model.response.chat.User
 import com.uni.information_security.ui.chat.ChatActivity
 import com.uni.information_security.ui.main.MainViewModel
+import com.uni.information_security.utils.EMPTY_STRING
 import com.uni.information_security.utils.USER_DATA
 
 class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
@@ -33,6 +36,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
     private val userAdapter = UserAdapter(userList, this)
 
     private val groupList = mutableListOf<Group?>()
+    private val baseGroupList = mutableListOf<Group?>()
     private val groupAdapter = GroupAdapter(groupList, this)
 
     private lateinit var iMainCallBack: IMainCallBack
@@ -70,6 +74,26 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
 
     override fun initListener() {
         viewModel.getGroups()
+        binding.edtSearchGroup.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                groupList.clear()
+                for (group in baseGroupList) {
+                    if (group?.name?.contains(s?: EMPTY_STRING, true) == true) {
+                        groupList.add(group)
+                    }
+                }
+                groupAdapter.notifyDataSetChanged()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
     }
 
     override fun observerLiveData() {
@@ -125,6 +149,8 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
                 binding.tvGroup.visibility = View.VISIBLE
                 groupList.clear()
                 groupList.addAll(data)
+                baseGroupList.clear()
+                baseGroupList.addAll(data)
                 groupAdapter.notifyItemRangeInserted(0, groupList.size)
             })
             groupChangeResponse.observe(this@GroupFragment, { data ->
@@ -137,6 +163,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
                 }
                 if (pos != -1) {
                     groupList[pos] = data
+                    baseGroupList[pos] = data
                     groupAdapter.notifyItemChanged(pos)
                 }
 
@@ -150,6 +177,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
                     }
                 }
                 if (pos != -1) {
+                    baseGroupList.removeAt(pos)
                     groupAdapter.removeItem(pos)
                 }
             })
