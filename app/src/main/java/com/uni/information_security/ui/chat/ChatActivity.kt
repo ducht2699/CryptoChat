@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityChatBinding
+import com.uni.information_security.ui.main.MainActivity
 import com.uni.information_security.utils.CommonUtils.showCustomUI
 import com.uni.information_security.utils.EXTRA_GROUP_ID
 
@@ -35,4 +36,8 @@ class ChatActivity : BaseActivity<ChatViewModel, ActivityChatBinding>() {
 
     }
 
+    override fun onBackPressed() {
+        startActivity(MainActivity.getIntent(this))
+        finishAffinity()
+    }
 }
