@@ -12,6 +12,7 @@ import com.uni.information_security.R
 import com.uni.information_security.base.BaseActivity
 import com.uni.information_security.databinding.ActivityMainBinding
 import com.uni.information_security.interfaces.IMainCallBack
+import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.ui.chat.ChatActivity
 import com.uni.information_security.ui.create_group.CreateGroupActivity
 import com.uni.information_security.ui.login.LoginActivity
@@ -20,6 +21,7 @@ import com.uni.information_security.ui.personal.PersonalActivity
 import com.uni.information_security.utils.CommonUtils
 import com.uni.information_security.utils.CommonUtils.showCustomUI
 import com.uni.information_security.utils.EXTRA_GROUP_ID
+import com.uni.information_security.utils.GROUP_DATA
 import com.uni.information_security.utils.USER_DATA
 import com.uni.information_security.view_model.ViewModelFactory
 
@@ -70,15 +72,14 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(), IMainCa
     override fun observerLiveData() {
     }
 
-    override fun changeFragmentCallBack(isGroupFragment: Boolean, data: String?) {
+    override fun changeFragmentCallBack(isGroupFragment: Boolean, data: Group?) {
         if (isGroupFragment) {
             binding.toolbar.lnlBack.visibility = View.GONE
             binding.toolbar.cvUser.visibility = View.VISIBLE
             binding.toolbar.imvRight.visibility = View.GONE
         } else {
-            val i = Intent(binding.root.context, ChatActivity::class.java)
-            i.putExtra(EXTRA_GROUP_ID, data)
-            startActivity(i)
+            GROUP_DATA = data
+            startActivity(Intent(this, ChatActivity::class.java))
             finishAffinity()
         }
     }

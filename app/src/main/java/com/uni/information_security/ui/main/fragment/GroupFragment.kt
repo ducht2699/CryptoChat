@@ -3,6 +3,7 @@ package com.uni.information_security.ui.main.fragment
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -74,6 +75,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
     override fun observerLiveData() {
         viewModel.apply {
             userAddResponse.observe(this@GroupFragment, { data ->
+                binding.tvUsers.visibility = View.VISIBLE
                 userList.clear()
                 userList.addAll(data)
                 userAdapter.notifyDataSetChanged()
@@ -120,6 +122,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
             })
 
             groupAddResponse.observe(this@GroupFragment, { data ->
+                binding.tvGroup.visibility = View.VISIBLE
                 groupList.clear()
                 groupList.addAll(data)
                 groupAdapter.notifyItemRangeInserted(0, groupList.size)
@@ -158,7 +161,7 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
     }
 
     override fun onGroupClick(data: Group?) {
-     iMainCallBack.changeFragmentCallBack(false, data?.id)
+     iMainCallBack.changeFragmentCallBack(false, data)
     }
 
 }
