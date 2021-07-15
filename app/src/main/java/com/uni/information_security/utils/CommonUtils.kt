@@ -32,12 +32,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.uni.information_security.R
 import java.io.*
+import java.lang.Byte.decode
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
@@ -149,13 +149,13 @@ object CommonUtils {
                     var imgWidth = 0
                     var imgHeight = 0
                     imgWidth = if (decodedByte.width > 1480) {
-                        (decodedByte.width / 1.2).toInt()
+                        (decodedByte.width / 1f).toInt()
                     } else {
                         decodedByte.width
                     }
 
                     imgHeight = if (decodedByte.height > 1000) {
-                        (decodedByte.height / 1.2).toInt()
+                        (decodedByte.height / 1f).toInt()
                     } else {
                         decodedByte.height
                     }

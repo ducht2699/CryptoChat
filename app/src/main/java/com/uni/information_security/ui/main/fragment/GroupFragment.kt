@@ -1,5 +1,11 @@
 package com.uni.information_security.ui.main.fragment
 
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -8,12 +14,15 @@ import com.uni.information_security.interfaces.IMainCallBack
 import com.uni.information_security.R
 import com.uni.information_security.base.BaseFragment
 import com.uni.information_security.databinding.FragmentGroupBinding
+import com.uni.information_security.model.response.chat.Group
 import com.uni.information_security.model.response.chat.User
-import com.uni.information_security.ui.main.MainActivity
+import com.uni.information_security.ui.chat.ChatActivity
 import com.uni.information_security.ui.main.MainViewModel
+import com.uni.information_security.utils.EMPTY_STRING
+import com.uni.information_security.utils.USER_DATA
 
 class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
-    UserAdapter.IUserCallBack {
+    UserAdapter.IUserCallBack, GroupAdapter.IOnGroupClick {
 
     companion object {
         fun getInstance(iMainCallBack: IMainCallBack): Fragment {
@@ -25,6 +34,10 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
 
     private val userList = mutableListOf<User?>()
     private val userAdapter = UserAdapter(userList, this)
+
+    private val groupList = mutableListOf<Group?>()
+    private val baseGroupList = mutableListOf<Group?>()
+    private val groupAdapter = GroupAdapter(groupList, this)
 
     private lateinit var iMainCallBack: IMainCallBack
 
@@ -55,24 +68,128 @@ class GroupFragment : BaseFragment<MainViewModel, FragmentGroupBinding>(),
 
     private fun initGroupRcv() {
         binding.rcvGroups.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rcvGroups.adapter = groupAdapter
     }
 
     override fun initListener() {
+        viewModel.getGroups()
+        binding.edtSearchGroup.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                groupList.clear()
+                for (group in baseGroupList) {
+                    if (group?.name?.contains(s?: EMPTY_STRING, true) == true) {
+                        groupList.add(group)
+                    }
+                }
+                groupAdapter.notifyDataSetChanged()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
     }
 
     override fun observerLiveData() {
         viewModel.apply {
-            userResponse.observe(this@GroupFragment, { data ->
+            userAddResponse.observe(this@GroupFragment, { data ->
+                binding.tvUsers.visibility = View.VISIBLE
                 userList.clear()
                 userList.addAll(data)
                 userAdapter.notifyDataSetChanged()
+            })
+            userChangeResponse.observe(this@GroupFragment, { data ->
+                if (data?.id == USER_DATA?.id) {
+                    USER_DATA = data
+                    iMainCallBack.updateUIUser()
+                }
+                var pos = -1
+                for (user in userList) {
+                    if (data?.id == user?.id) {
+                        pos = userList.indexOf(user)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    userList[pos] = data
+                    userAdapter.notifyItemChanged(pos)
+                }
+
+            })
+            userRemovedResponse.observe(this@GroupFragment, { data ->
+                if (data?.id == USER_DATA?.id) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        Toast.makeText(
+                            binding.root.context,
+                            binding.root.context.resources.getString(R.string.str_account_unavailable),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }, 1000)
+                    iMainCallBack.userUnavailable()
+                }
+                var pos = -1
+                for (user in userList) {
+                    if (data?.id == user?.id) {
+                        pos = userList.indexOf(user)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    userAdapter.removeItem(pos)
+                }
+            })
+
+            groupAddResponse.observe(this@GroupFragment, { data ->
+                binding.tvGroup.visibility = View.VISIBLE
+                groupList.clear()
+                groupList.addAll(data)
+                baseGroupList.clear()
+                baseGroupList.addAll(data)
+                groupAdapter.notifyItemRangeInserted(0, groupList.size)
+            })
+            groupChangeResponse.observe(this@GroupFragment, { data ->
+                var pos = -1
+                for (group in groupList) {
+                    if (data?.id == group?.id) {
+                        pos = groupList.indexOf(group)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    groupList[pos] = data
+                    baseGroupList[pos] = data
+                    groupAdapter.notifyItemChanged(pos)
+                }
+
+            })
+            groupRemovedResponse.observe(this@GroupFragment, { data ->
+                var pos = -1
+                for (group in groupList) {
+                    if (data?.id == group?.id) {
+                        pos = groupList.indexOf(group)
+                        break
+                    }
+                }
+                if (pos != -1) {
+                    baseGroupList.removeAt(pos)
+                    groupAdapter.removeItem(pos)
+                }
             })
         }
     }
 
     override fun onUserClick(user: User?) {
         Toast.makeText(context, user?.username, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onGroupClick(data: Group?) {
+     iMainCallBack.changeFragmentCallBack(false, data)
     }
 
 }

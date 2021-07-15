@@ -14,5 +14,5 @@
     <color name="colorYellow">#FFEBAC</color>
     <color name="colorYellowDark">#FFCD36</color>
     <color name="color_hint_text">#99FFFFFF</color>
-    <color name="color_bg_search_edt">#3B000000</color>
+    <color name="color_bg_search_edt">#0C000000</color>
 </resources>

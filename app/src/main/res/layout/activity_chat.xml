@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        tools:context=".ui.chat.ChatActivity">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar_shadow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_messages"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/lnl_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginBottom="@dimen/dp8"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edt_chat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp8"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_edt"
+                android:hint="@string/str_insert_message"
+                android:maxHeight="@dimen/dp200"
+                android:minHeight="@dimen/dp40"
+                android:padding="@dimen/dp8"
+                android:paddingStart="@dimen/dp16"
+                android:paddingEnd="@dimen/dp8"
+                android:textColor="@color/colorBlack" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imv_send"
+                    android:layout_width="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="bottom"
+                    android:padding="@dimen/dp8"
+                    android:src="@drawable/ic_baseline_send_24" />
+
+                <ProgressBar
+                    android:id="@+id/loading"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="@id/imv_send"
+                    app:layout_constraintBottom_toBottomOf="@id/imv_send"
+                    app:layout_constraintStart_toStartOf="@id/imv_send"
+                    app:layout_constraintEnd_toEndOf="@id/imv_send"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

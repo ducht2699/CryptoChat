@@ -34,5 +34,23 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="str_search">Search</string>
     <string name="str_tap_to_select">Nhấn để chọn</string>
-
+    <string name="str_update_password">Cập nhật mật khẩu</string>
+    <string name="str_me">Me</string>
+    <string name="str_log_out">Đăng xuất</string>
+    <string name="str_old_password">Mật khẩu cũ</string>
+    <string name="str_new_password">Mật khẩu mới</string>
+    <string name="str_change_password">Đổi mật khẩu</string>
+    <string name="str_wrong_password">Mật khẩu cũ không đúng!</string>
+    <string name="str_change_password_success">Đổi mật khẩu thành công!</string>
+    <string name="str_account_unavailable">Tài khoản bị vô hiệu hoá!</string>
+    <string name="str_create_room">Tạo phòng</string>
+    <string name="str_error">Có lỗi xảy ra, xin thử lại!</string>
+    <string name="str_group_name">Tên phòng chat</string>
+    <string name="str_failed">Thao tác thất bại, mời thử lại!</string>
+    <string name="str_group_chat">Nhóm của %s</string>
+    <string name="str_user">Người dùng</string>
+    <string name="str_group">Nhóm chat</string>
+    <string name="str_insert_message">Nhập tin nhắn...</string>
+    <string name="str_save">Lưu thay đổi</string>
+    <string name="str_leave">Rời nhóm</string>
 </resources>

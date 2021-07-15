@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.chat_info.ChatInfoActivity">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_users"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp8"
+                    android:layout_marginTop="@dimen/dp30"
+                    android:text="@string/str_user"
+                    android:textColor="@color/colorGrayText"
+                    android:textSize="@dimen/sp18"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/dp8"
+                    android:layout_weight="1"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginEnd="@dimen/dp16"
+            android:text="@string/str_save"
+            android:textSize="@dimen/sp18" />
+
+        <Button
+            android:id="@+id/btn_leave"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_marginEnd="@dimen/dp16"
+            android:layout_marginBottom="@dimen/dp16"
+            android:backgroundTint="#D81C1C"
+            android:text="@string/str_leave"
+            android:textSize="@dimen/sp18" />
+
+    </LinearLayout>
+</layout>

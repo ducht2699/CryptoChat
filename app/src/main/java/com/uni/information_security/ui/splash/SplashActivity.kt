@@ -9,6 +9,7 @@ import com.uni.information_security.databinding.ActivitySplashBinding
 import com.uni.information_security.ui.login.LoginActivity
 import com.uni.information_security.ui.login.LoginViewModel
 import com.uni.information_security.ui.main.MainActivity
+import com.uni.information_security.utils.CommonUtils.showCustomUI
 import com.uni.information_security.view_model.ViewModelFactory
 
 class SplashActivity : BaseActivity<LoginViewModel, ActivitySplashBinding>() {
@@ -22,6 +23,7 @@ class SplashActivity : BaseActivity<LoginViewModel, ActivitySplashBinding>() {
     }
 
     override fun initView() {
+        showCustomUI()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
