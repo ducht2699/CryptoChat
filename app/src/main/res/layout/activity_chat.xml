@@ -7,12 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
         android:orientation="vertical"
         tools:context=".ui.chat.ChatActivity">
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/layout_toolbar_shadow" />
+            layout="@layout/layout_toolbar_shadow_no_full" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_messages"
